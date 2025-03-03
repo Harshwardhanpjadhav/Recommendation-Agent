@@ -1,7 +1,5 @@
 # Recommendation-Agent
 
-Below is an example of a complete README.md file you can include in your repository:
-
 ---
 
 # Personalized Recommendation App
