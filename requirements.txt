@@ -8,3 +8,4 @@ uvicorn
 dotenv
 newsapi-python
 streamlit
+fastapi-cache2
