@@ -1,6 +1,7 @@
 fastapi 
 pydantic
 bcrypt
+pytest
 pandas
 python-multipart
 uvicorn
