@@ -124,6 +124,26 @@ personalized-recommendation-app/
     └── test_api.py        # API test cases using pytest and FastAPI TestClient
 ```
 
+## Data Input it takes
+```
+{
+    "user_id": "1",
+    "interests": [
+      "technology"
+    ],
+    "preferences": {
+      "language": "es",
+      "max_recommendations": 10
+    },
+    "demographics": {
+      "age": 30,
+      "gender": "male",
+      "occupation": "Software Engineer"
+    }
+  }
+```
+- It takes only this format input has schema defined in backend which allows only this structure format
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
