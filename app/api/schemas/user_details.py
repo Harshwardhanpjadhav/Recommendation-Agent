@@ -7,9 +7,3 @@ class UserProfile(BaseModel):
     interests: List[str]
     preferences: Optional[Dict] = {}
     demographics: Optional[Dict] = {}
-
-class Recommendation(BaseModel):
-    title: str
-    description: str
-    source: str
-    relevance: float

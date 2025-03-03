@@ -21,7 +21,7 @@ class UsersDetail:
             self.users_collection.insert_one(user_data)
             return {
                     "message": "Profile submitted successfully",
-                    "user_id": "testuser"
+                    "user_id": data.user_id
                     }
         except Exception as e:
             logging.error(e)
