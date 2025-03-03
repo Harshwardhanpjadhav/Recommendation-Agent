@@ -6,3 +6,4 @@ python-multipart
 uvicorn
 dotenv
 newsapi-python
+streamlit

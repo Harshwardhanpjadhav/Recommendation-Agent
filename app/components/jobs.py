@@ -7,7 +7,7 @@ from app.constants.mongodb_constant import DATABASE_NAME, JOBS
 class Jobs:
     def __init__(self):
         self.db = ConnectMongoDB(DATABASE_NAME)
-        self.users_collection = self.db.get_collection(JOBS)
+        self.jobs_collection = self.db.get_collection(JOBS)
 
     def get_posted_date(self, job):
         posted_date_val = job.get("job_posted_date", "")
@@ -79,7 +79,7 @@ class Jobs:
         """
         user_interests = user_profile.get("interests", [])
         for job in job_postings:
-            job["final_score"] = calculate_job_final_score(job, user_interests)
+            job["final_score"] = self.calculate_job_final_score(job, user_interests)
 
         # Sort the jobs by final_score (highest first)
         ranked_jobs = sorted(
@@ -91,7 +91,7 @@ class Jobs:
         return ranked_jobs[:max_recs]
 
     def get_jobs(self, user_profile):
-        job_postings = list(self.users_collection.find({}))
+        job_postings = list(self.jobs_collection.find({}))
         ranked_jobs = self.rank_job_postings(job_postings, user_profile)
         jobs_dict = {}
         for i, job in enumerate(ranked_jobs, start=1):

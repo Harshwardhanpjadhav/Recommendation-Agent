@@ -9,9 +9,10 @@ from app.components.jobs import Jobs
 class Recommendation:
 
     def __init__(self,user_id):
-        self.user_profile = self.users_collection.find_one({"_id":user_id})
         self.db = ConnectMongoDB(DATABASE_NAME)
         self.users_collection = self.db.get_collection(USERS_COLLECTIONS)
+        self.user_profile = self.users_collection.find_one({"user_id":user_id})
+        logging.info(f"Users details {self.users_collection}")
     
     def get_news_recommendation(self):
         try:
@@ -28,7 +29,7 @@ class Recommendation:
             get_jobs = jobs.get_jobs(self.user_profile)
             return get_jobs
         except Exception as e:
-            logging.error(f"Error in getting news recommendation {e}")
+            logging.error(f"Error in getting job recommendation {e}")
             return None
     
     def get_recommendation(self):
