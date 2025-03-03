@@ -1,4 +1,4 @@
 
-DATABASE_NAME = "users"
+DATABASE_NAME = "recommend"
 
-COLLECTION_NAME = "members"
+USERS_COLLECTIONS = "users_details"
