@@ -1,23 +1,19 @@
-
 from newsapi import NewsApiClient
 from datetime import datetime, timezone
 from app.configurations.logging import logging
 from app.configurations.exception import CustomException
 
-
 class News:
 
     def __init__(self):
-        self.newsapi = NewsApiClient(
-            api_key='1ad5fce26f95420cb7acf97f37fafebb')
+        self.newsapi = NewsApiClient(api_key='1ad5fce26f95420cb7acf97f37fafebb')
 
-    def fetch_news_for_interest(self, interest):
+    def fetch_news_for_interest(self, interest, lan):
         """
-        Fetch news articles from NewsAPI's 'everything' endpoint for a given interest.
+        Fetch news articles from NewsAPI's 'everything' endpoint for a given interest and language.
         """
         try:
-            response = self.newsapi.get_everything(q=interest, language='en')
-
+            response = self.newsapi.get_everything(q=interest, language=lan)
             articles = response.get("articles", [])
             news_list = []
             for article in articles:
@@ -25,12 +21,11 @@ class News:
                 description = article.get("description") or ""
                 published_at_str = article.get("publishedAt", "")
                 try:
-                    published_date = datetime.fromisoformat(
-                        published_at_str.rstrip("Z"))
+                    published_date = datetime.fromisoformat(published_at_str.rstrip("Z"))
                     if published_date.tzinfo is None:
-                        published_date = published_date.replace(
-                            tzinfo=timezone.utc)
+                        published_date = published_date.replace(tzinfo=timezone.utc)
                 except CustomException as e:
+                    logging.error(f"Date parsing error: {e}")
                     published_date = None
                 url = article.get("url")
                 source = article.get("source", {}).get("name", "NewsAPI")
@@ -54,8 +49,7 @@ class News:
             score = base_relevance
 
             title_lower = article["title"].lower()
-            description_lower = article["description"].lower(
-            ) if article["description"] else ""
+            description_lower = article["description"].lower() if article["description"] else ""
 
             for interest in user_interests:
                 interest_lower = interest.lower()
@@ -77,10 +71,13 @@ class News:
     def fetch_news_based_on_profile(self, user_profile):
         try:
             aggregated_news = []
-
+            # Get language preference from user profile, defaulting to 'en'
+            language = user_profile.get("preferences", {}).get("language", "en")
+            
             for interest in user_profile.get("interests", []):
-                articles = self.fetch_news_for_interest(interest)
-                aggregated_news.extend(articles)
+                articles = self.fetch_news_for_interest(interest, language)
+                if articles:
+                    aggregated_news.extend(articles)
 
             seen_urls = set()
             unique_news = []
@@ -91,14 +88,11 @@ class News:
 
             user_interests = user_profile.get("interests", [])
             for article in unique_news:
-                article["final_score"] = self.calculate_final_score(
-                    article, user_interests)
+                article["final_score"] = self.calculate_final_score(article, user_interests)
 
-            ranked_news = sorted(
-                unique_news, key=lambda x: x["final_score"], reverse=True)
+            ranked_news = sorted(unique_news, key=lambda x: x["final_score"], reverse=True)
 
-            max_recs = user_profile.get("preferences", {}).get(
-                "max_recommendations", len(ranked_news))
+            max_recs = user_profile.get("preferences", {}).get("max_recommendations", len(ranked_news))
             return ranked_news[:max_recs]
         except CustomException as e:
             logging.error(e)
@@ -106,8 +100,7 @@ class News:
 
     def get_news(self, user_profile):
         try:
-            news_recommendations = self.fetch_news_based_on_profile(
-                user_profile)
+            news_recommendations = self.fetch_news_based_on_profile(user_profile)
             news_dict = {}
             for i, news in enumerate(news_recommendations, start=1):
                 news_dict[f"news_{i}"] = {
