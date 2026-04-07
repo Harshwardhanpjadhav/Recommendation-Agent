@@ -177,3 +177,33 @@ async def pr_node(state: AgentState):
     return {
         "status": "pull_request_opened"
     }
+    """
+    Step 5: The 'Presentation'.
+    Opens a Pull Request so the human can review the code.
+    """
+    print(f"📣 [BOT] Opening Pull Request for {state['task_id']}...")
+    
+    pr_title = f"🤖 AI Fix: {state['task_id']}"
+    pr_body = f"""
+    ### 🤖 Automated Implementation by Bot Engine
+    
+    **Task ID:** {state['task_id']}
+    **Proposed Plan:**
+    {" ".join([f"- {step}" for step in state['plan']])}
+    
+    **Status:** Code generated and verified in sandbox.
+    Please review the changes in the 'Files changed' tab.
+    """
+    
+    # head is the branch name we saved in the Git Node
+    result = await gh_service.create_pull_request(
+        title=pr_title,
+        body=pr_body,
+        head=state['current_file'] 
+    )
+    
+    print(f"🚀 [BOT] PR Created successfully: {result.get('html_url')}")
+    
+    return {
+        "status": "pull_request_opened"
+    }
