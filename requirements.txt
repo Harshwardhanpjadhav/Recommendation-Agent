@@ -6,3 +6,5 @@ langchain-openai
 aiosqlite
 python-dotenv
 httpx
+GitPython
+langchain-openrouter

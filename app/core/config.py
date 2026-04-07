@@ -21,6 +21,10 @@ class Settings(BaseSettings):
     GITHUB_TOKEN: str
     GITHUB_REPO_OWNER: str
     GITHUB_REPO_NAME: str
+
+    OPENROUTER_API_KEY: str
+    OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
+    OPENROUTER_MODEL_NAME: str = "anthropic/claude-3.5-sonnet"
     
 
 settings = Settings()
