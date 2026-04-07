@@ -147,6 +147,24 @@ async def context_node(state: AgentState):
 from app.services.github.github_service import gh_service
 
 async def pr_node(state: AgentState):
+    print(f"📣 [BOT] Attempting PR for {state['task_id']}...")
+    
+    # head must be: "username:branch-name" OR just "branch-name"
+    # base must be: "main" (or your default branch)
+    result = await gh_service.create_pull_request(
+        title=f"🤖 AI Fix: {state['task_id']}",
+        body="Automated PR by Bot Engine.",
+        head=state['current_file'], # This is your branch name
+        base="main" 
+    )
+    
+    # THIS IS THE KEY: If it failed, show us why
+    if "html_url" in result:
+        print(f"🚀 [BOT] PR Created! View it at: {result['html_url']}")
+    else:
+        print(f"⚠️ GitHub API Response: {result}") # This will show the error
+    
+    return {"status": "pull_request_complete"}
     """
     Step 5: The 'Presentation'.
     Opens a Pull Request so the human can review the code.

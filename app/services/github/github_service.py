@@ -28,12 +28,8 @@ class GitHubService:
         # We will implement this once we start coding!
         pass
 
+    # In app/services/github/github_service.py
     async def create_pull_request(self, title: str, body: str, head: str, base: str = "main"):
-        """
-        Creates a formal Pull Request on GitHub.
-        head: the branch with changes (e.g., bot/fix-gh-12)
-        base: the branch to merge into (usually main)
-        """
         url = f"{self.base_url}/pulls"
         data = {
             "title": title,
@@ -42,6 +38,7 @@ class GitHubService:
             "base": base
         }
         async with httpx.AsyncClient() as client:
+            # IMPORTANT: Ensure self.headers includes "Accept": "application/vnd.github+json"
             response = await client.post(url, headers=self.headers, json=data)
             return response.json()
 
