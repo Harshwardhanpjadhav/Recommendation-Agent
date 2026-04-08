@@ -8,3 +8,4 @@ python-dotenv
 httpx
 GitPython
 langchain-openrouter
+docker

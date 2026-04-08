@@ -17,6 +17,7 @@ async def init_db():
         await db.execute("""
             CREATE TABLE IF NOT EXISTS tasks (
                 id TEXT PRIMARY KEY,
+                project_id TEXT,
                 description TEXT,
                 plan TEXT,
                 status TEXT DEFAULT 'pending',

@@ -1,11 +1,9 @@
-from typing import TypedDict, List, Annotated
-import operator
+from typing import TypedDict, Annotated
+from langgraph.graph.message import add_messages
 
 class AgentState(TypedDict):
     task_id: str
+    project_id: str
     issue_description: str
-    plan: Annotated[List[str], operator.add]
-    repo_files: List[str]
-    current_file: str  # This will store the branch name after Git Node
-    code_snippet: str
-    status: str
+    container_name: str 
+    messages: Annotated[list, add_messages]
